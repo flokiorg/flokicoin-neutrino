@@ -495,7 +495,7 @@ func testStartRescan(harness *neutrinoHarness, t *testing.T) {
 			default:
 			}
 
-			if _, err := node.GetRawTransaction(&hash, nil); err != nil { // #FLZ_CHANGE
+			if _, err := node.GetRawTransaction(&hash); err != nil { // #FLZ_CHANGE
 				continue
 			}
 
@@ -686,7 +686,7 @@ func fetchPrevInputScripts(block *wire.MsgBlock, client *rpctest.Harness) ([][]b
 		for _, txIn := range tx.TxIn {
 			prevTxHash := txIn.PreviousOutPoint.Hash
 
-			prevTx, err := client.Client.GetRawTransaction(&prevTxHash, nil) // #FLZ_CHANGE
+			prevTx, err := client.Client.GetRawTransaction(&prevTxHash) // #FLZ_CHANGE
 			if err != nil {
 				return nil, err
 			}
