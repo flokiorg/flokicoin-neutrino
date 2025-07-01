@@ -6,6 +6,7 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/flokiorg/go-flokicoin v0.25.13-alpha
 	github.com/flokiorg/walletd v0.1.5-beta
+	github.com/lightningnetwork/lnd/fn/v2 v2.0.8
 	github.com/lightningnetwork/lnd/queue v1.1.1
 	github.com/stretchr/testify v1.11.1
 )
@@ -24,6 +25,7 @@ require (
 	github.com/stretchr/objx v0.5.2 // indirect
 	go.etcd.io/bbolt v1.4.3 // indirect
 	golang.org/x/crypto v0.45.0 // indirect
+	golang.org/x/exp v0.0.0-20250210185358-939b2ce775ac // indirect
 	golang.org/x/sync v0.18.0 // indirect
 	golang.org/x/sys v0.38.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
