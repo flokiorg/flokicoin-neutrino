@@ -38,8 +38,7 @@ var blockHdrs = []string{
 
 // Filter headers for testing captured from simnet network.
 var filterHdrs = []string{
-	"b2ef0f5c5d790832d79fc9c9a7b3cef02dd94f143c63feba9d836248cad6" +
-		"24cf",
+	"1f7851ec0bbd3d674c1941953fd636d0c5713097a4a24286bc98f83967618d02",
 	"b14a448b043b12401327695318318bbb53ec955e1e7963e3fd569a450448" +
 		"9177",
 	"75ae9eebc6e956fcb4fa00853aec5f252cf0046ed03587feece580386a6c" +
@@ -163,6 +162,180 @@ func TestImportSkipOperation(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			prep := tc.prep()
+			hI, err := NewHeadersImport(prep.options)
+			require.NoError(t, err)
+			importResult, err := hI.Import()
+			verify := verify{
+				tc:            t,
+				importOptions: prep.options,
+				importResult:  importResult,
+			}
+			if tc.expectErr {
+				require.ErrorContains(t, err, tc.expectErrMsg)
+				tc.verify(verify)
+				return
+			}
+			require.NoError(t, err)
+			tc.verify(verify)
+		})
+	}
+}
+
+// TestImportOperationOnFileHeaderSource tests the import operation on a file
+// header source. It checks that the import is successful and that the headers
+// are written to the target header stores.
+func TestImportOperationOnFileHeaderSource(t *testing.T) {
+	t.Parallel()
+	type prep struct {
+		options *ImportOptions
+		cleanup func()
+		err     error
+	}
+	type verify struct {
+		tc            *testing.T
+		importOptions *ImportOptions
+		importResult  *ImportResult
+	}
+	testCases := []struct {
+		name         string
+		prep         func() prep
+		verify       func(verify)
+		expectErr    bool
+		expectErrMsg string
+	}{
+		{
+			name: "ImportWithoutErrors",
+			prep: func() prep {
+				tempDir := t.TempDir()
+				c1 := func() {
+					os.RemoveAll(tempDir)
+				}
+
+				dbPath := filepath.Join(tempDir, "test.db")
+				db, err := walletdb.Create(
+					"bdb", dbPath, true, time.Second*10, false,
+				)
+				c2 := func() {
+					db.Close()
+					c1()
+				}
+				if err != nil {
+					return prep{
+						cleanup: c2,
+						err:     err,
+					}
+				}
+
+				b, err := headerfs.NewBlockHeaderStore(
+					tempDir, db, &chaincfg.SimNetParams,
+				)
+				if err != nil {
+					return prep{
+						cleanup: c2,
+						err:     err,
+					}
+				}
+
+				f, err := headerfs.NewFilterHeaderStore(
+					tempDir, db, headerfs.RegularFilter,
+					&chaincfg.SimNetParams, nil,
+				)
+				if err != nil {
+					return prep{
+						cleanup: c2,
+						err:     err,
+					}
+				}
+
+				bFile, c3, err := setupFileWithHdrs(
+					headerfs.Block, true,
+				)
+				c4 := func() {
+					c3()
+					c2()
+				}
+				if err != nil {
+					return prep{
+						cleanup: c4,
+						err:     err,
+					}
+				}
+				bPath := bFile.Name()
+
+				// Close block headers import source to be
+				// opened during import.
+				bFile.Close()
+
+				fFile, c5, err := setupFileWithHdrs(
+					headerfs.RegularFilter, true,
+				)
+				cleanup := func() {
+					c5()
+					c4()
+				}
+				if err != nil {
+					return prep{
+						cleanup: cleanup,
+						err:     err,
+					}
+				}
+				fPath := fFile.Name()
+
+				// Close filter headers import source to be
+				// opened during import.
+				fFile.Close()
+
+				tCP := chaincfg.SimNetParams
+				flags := blockchain.BFFastAdd | blockchain.BFNoPoWCheck
+
+				ops := &ImportOptions{
+					BlockHeadersSource:      bPath,
+					FilterHeadersSource:     fPath,
+					TargetBlockHeaderStore:  b,
+					TargetFilterHeaderStore: f,
+					TargetChainParams:       tCP,
+					WriteBatchSizePerRegion: 128,
+					ValidationFlags:         flags,
+				}
+
+				return prep{
+					options: ops,
+					cleanup: cleanup,
+				}
+			},
+			verify: func(v verify) {
+				// Verify the user write batch size is used
+				// instead of the default one.
+				ops := v.importOptions
+				require.Equal(
+					v.tc, 128, ops.WriteBatchSizePerRegion,
+				)
+
+				// Verify headers added/processed excluding the
+				// genesis header.
+				require.Equal(
+					v.tc, len(blockHdrs)-1,
+					v.importResult.AddedCount,
+				)
+				require.Equal(
+					v.tc, len(blockHdrs)-1,
+					v.importResult.ProcessedCount,
+				)
+
+				// Verify no headers skipped.
+				require.Equal(
+					v.tc, 0, v.importResult.SkippedCount,
+				)
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			prep := tc.prep()
+			t.Cleanup(prep.cleanup)
+			require.NoError(t, prep.err)
+
 			hI, err := NewHeadersImport(prep.options)
 			require.NoError(t, err)
 			importResult, err := hI.Import()
