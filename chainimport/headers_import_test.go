@@ -13,6 +13,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/flokiorg/flokicoin-neutrino/chainsync"
 	"github.com/flokiorg/flokicoin-neutrino/headerfs"
 	"github.com/flokiorg/go-flokicoin/blockchain"
 	"github.com/flokiorg/go-flokicoin/chaincfg"
@@ -4062,6 +4063,184 @@ func TestHeaderValidationOnSequentialBlockHeaders(t *testing.T) {
 				require.ErrorContains(
 					t, err, tc.expectErrMsg,
 				)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+// TestHeaderValidationOnSequentialFilterHeaders tests the header validation
+// on sequential filter headers. It checks that the header is validated
+// correctly.
+func TestHeaderValidationOnSequentialFilterHeaders(t *testing.T) {
+	t.Parallel()
+	type prep struct {
+		iterator  HeaderIterator
+		validator HeadersValidator
+		cleanup   func()
+		err       error
+	}
+	testCases := []struct {
+		name         string
+		index        int
+		tCP          *chaincfg.Params
+		prep         func(chaincfg.Params) prep
+		expectErr    bool
+		expectErrMsg string
+	}{
+		{
+			name: "ErrorOnInvalidSequentialHeaders",
+			tCP:  &chaincfg.MainNetParams,
+			prep: func(tCP chaincfg.Params) prep {
+				fFile, c1, err := setupFileWithHdrs(
+					headerfs.RegularFilter, false,
+				)
+
+				if err != nil {
+					return prep{
+						cleanup: c1,
+						err:     err,
+					}
+				}
+
+				fFile.Close()
+
+				// Add header metadata to the file. Deliberately
+				// make the start height one before a chain
+				// param checkpoint (height=147, one of
+				// Flokicoin mainnet's checkpoints) to evaluate
+				// the filter header validation behavior.
+				err = AddHeadersImportMetadata(
+					fFile.Name(), wire.MainNet, 0,
+					headerfs.RegularFilter, 146,
+				)
+				if err != nil {
+					return prep{
+						cleanup: c1,
+						err:     err,
+					}
+				}
+
+				fFile, err = os.OpenFile(
+					fFile.Name(), os.O_RDWR, 0644,
+				)
+				c1 = func() {
+					fFile.Close()
+					os.Remove(fFile.Name())
+				}
+				if err != nil {
+					return prep{
+						cleanup: c1,
+						err:     err,
+					}
+				}
+
+				opts := &ImportOptions{
+					TargetChainParams: tCP,
+				}
+				fS := opts.createFilterHeaderImportSrc()
+				fS.SetURI(fFile.Name())
+				err = fS.Open()
+				cleanup := func() {
+					fS.Close()
+					os.Remove(fS.GetURI())
+				}
+				if err != nil {
+					return prep{
+						cleanup: cleanup,
+						err:     err,
+					}
+				}
+
+				meta, err := fS.GetHeaderMetadata()
+				if err != nil {
+					return prep{
+						cleanup: cleanup,
+						err:     err,
+					}
+				}
+
+				fIterator := fS.Iterator(
+					0, meta.headersCount-1,
+					uint32(opts.WriteBatchSizePerRegion),
+				)
+
+				fV := opts.createFilterHeaderValidator()
+
+				return prep{
+					iterator:  fIterator,
+					validator: fV,
+					cleanup:   cleanup,
+				}
+			},
+			expectErr: true,
+			expectErrMsg: "batch validation failed at position " +
+				"0: " + chainsync.ErrCheckpointMismatch.Error(),
+		},
+		{
+			name: "ValidSequentialHeaders",
+			tCP:  &chaincfg.SimNetParams,
+			prep: func(tCP chaincfg.Params) prep {
+				fFile, c1, err := setupFileWithHdrs(
+					headerfs.RegularFilter, true,
+				)
+				if err != nil {
+					return prep{
+						cleanup: c1,
+						err:     err,
+					}
+				}
+
+				opts := &ImportOptions{
+					TargetChainParams: tCP,
+				}
+				fS := opts.createFilterHeaderImportSrc()
+				fS.SetURI(fFile.Name())
+				err = fS.Open()
+				cleanup := func() {
+					fS.Close()
+					os.Remove(fS.GetURI())
+				}
+				if err != nil {
+					return prep{
+						cleanup: cleanup,
+						err:     err,
+					}
+				}
+
+				meta, err := fS.GetHeaderMetadata()
+				if err != nil {
+					return prep{
+						cleanup: cleanup,
+						err:     err,
+					}
+				}
+
+				fIterator := fS.Iterator(
+					0, meta.headersCount-1,
+					uint32(opts.WriteBatchSizePerRegion),
+				)
+
+				fV := opts.createFilterHeaderValidator()
+
+				return prep{
+					iterator:  fIterator,
+					validator: fV,
+					cleanup:   cleanup,
+				}
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			prep := tc.prep(*tc.tCP)
+			t.Cleanup(prep.cleanup)
+			require.NoError(t, prep.err)
+			err := prep.validator.Validate(prep.iterator)
+			if tc.expectErr {
+				require.ErrorContains(t, err, tc.expectErrMsg)
 				return
 			}
 			require.NoError(t, err)
