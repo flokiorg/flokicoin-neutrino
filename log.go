@@ -2,6 +2,7 @@ package neutrino
 
 import (
 	"github.com/flokiorg/flokicoin-neutrino/blockntfns"
+	"github.com/flokiorg/flokicoin-neutrino/chainimport"
 	"github.com/flokiorg/flokicoin-neutrino/chanutils"
 	"github.com/flokiorg/flokicoin-neutrino/filterdb"
 	"github.com/flokiorg/flokicoin-neutrino/pushtx"
@@ -45,4 +46,5 @@ func UseLogger(logger flog.Logger) {
 	query.UseLogger(logger)
 	filterdb.UseLogger(logger)
 	chanutils.UseLogger(logger)
+	chainimport.UseLogger(logger)
 }
