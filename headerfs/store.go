@@ -394,7 +394,7 @@ func (h *blockHeaderStore) WriteHeaders(hdrs ...BlockHeader) error {
 	// Next, we'll write out all the passed headers in series into the
 	// buffer we just extracted from the pool.
 	for _, header := range hdrs {
-		if err := header.Serialize(headerBuf); err != nil {
+		if err := header.SerializeHeader(headerBuf); err != nil {
 			return err
 		}
 	}
