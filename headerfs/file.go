@@ -81,7 +81,7 @@ func (h *blockHeaderStore) readHeaderRange(startHeight uint32,
 	headers := make([]wire.BlockHeader, 0, numHeaders)
 	for headerReader.Len() != 0 {
 		var nextHeader wire.BlockHeader
-		if err := nextHeader.Deserialize(headerReader); err != nil {
+		if err := nextHeader.DeserializeHeader(headerReader); err != nil {
 			return nil, err
 		}
 
@@ -109,7 +109,7 @@ func (h *blockHeaderStore) readHeader(height uint32) (wire.BlockHeader, error) {
 	headerReader := bytes.NewReader(rawHeader)
 
 	// Finally, decode the raw bytes into a proper flokicoin header.
-	if err := header.Deserialize(headerReader); err != nil {
+	if err := header.DeserializeHeader(headerReader); err != nil {
 		return header, err
 	}
 
