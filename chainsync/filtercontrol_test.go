@@ -4,27 +4,26 @@ import (
 	"testing"
 
 	"github.com/flokiorg/go-flokicoin/chaincfg"
-	"github.com/flokiorg/go-flokicoin/chaincfg/chainhash"
 	"github.com/flokiorg/go-flokicoin/wire"
 )
 
 func TestControlCFHeader(t *testing.T) {
 	t.Parallel()
 
-	// We'll modify our backing list of checkpoints for this test.
+	// We'll construct params with a custom checkpoint for this test.
 	height := uint32(999)
 	header := hashFromStr(
 		"4a242283a406a7c089f671bb8df7671e5d5e9ba577cea1047d30a7f4919df193",
 	)
-	filterHeaderCheckpoints = map[wire.FlokicoinNet]map[uint32]*chainhash.Hash{
-		chaincfg.MainNetParams.Net: {
-			height: header,
-		},
-	}
+	params := chaincfg.MainNetParams
+	params.Checkpoints = []chaincfg.Checkpoint{{
+		Height: int32(height),
+		Hash:   header,
+	}}
 
 	// Expect the control at height to succeed.
 	err := ControlCFHeader(
-		chaincfg.MainNetParams, wire.GCSFilterRegular, height, header,
+		params, wire.GCSFilterRegular, height, header,
 	)
 	if err != nil {
 		t.Fatalf("error checking height: %v", err)
@@ -35,7 +34,7 @@ func TestControlCFHeader(t *testing.T) {
 		"000000000006a7c089f671bb8df7671e5d5e9ba577cea1047d30a7f4919df193",
 	)
 	err = ControlCFHeader(
-		chaincfg.MainNetParams, wire.GCSFilterRegular, height, header,
+		params, wire.GCSFilterRegular, height, header,
 	)
 	if err != ErrCheckpointMismatch {
 		t.Fatalf("expected ErrCheckpointMismatch, got %v", err)
@@ -44,7 +43,7 @@ func TestControlCFHeader(t *testing.T) {
 	// Finally, control an unknown height. This should also pass since we
 	// don't have the checkpoint stored.
 	err = ControlCFHeader(
-		chaincfg.MainNetParams, wire.GCSFilterRegular, 99, header,
+		params, wire.GCSFilterRegular, 99, header,
 	)
 	if err != nil {
 		t.Fatalf("error checking height: %v", err)
