@@ -44,8 +44,8 @@ all: build check
 # DEPENDENCIES
 # ============
 
-flokicoind:
-	@$(call print, "Installing flokicoind.")
+lokid:
+	@$(call print, "Installing lokid.")
 	cd $(TOOLS_DIR); go install -trimpath -tags=tools $(FLCD_PKG)
 
 $(GOACC_BIN):
@@ -70,15 +70,15 @@ build:
 
 check: unit
 
-unit: flokicoind
+unit: lokid
 	@$(call print, "Running unit tests.")
 	$(GOLIST) | $(XARGS) env $(GOTEST)
 
-unit-cover: flokicoind $(GOACC_BIN)
+unit-cover: lokid $(GOACC_BIN)
 	@$(call print, "Running unit coverage tests.")
 	$(GOACC_BIN) $(GOLIST_COVER)
 
-unit-race: flokicoind
+unit-race: lokid
 	@$(call print, "Running unit race tests.")
 	env CGO_ENABLED=1 GORACE="history_size=7 halt_on_errors=1" $(GOLIST) | $(XARGS) env $(GOTEST) -race
 
@@ -105,7 +105,7 @@ clean:
 	$(RM) coverage.txt
 
 .PHONY: all \
-	flokicoind \
+	lokid \
 	default \
 	build \
 	check \
