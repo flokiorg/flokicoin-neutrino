@@ -225,10 +225,10 @@ func TestRebroadcast(t *testing.T) {
 	}
 
 	// Now, we'll modify the Broadcast method to mark the fourth transaction
-	// as confirmed but with a flokicoind backend notification to test that
+	// as confirmed but with a lokid backend notification to test that
 	// the mapping between different backend errors and the neutrino
 	// BroadcastError works as expected. We also mark the last transaction
-	// with the flokicoind backend error for not having enough fees to be
+	// with the lokid backend error for not having enough fees to be
 	// included in the mempool. We expected that it gets rebroadcasted too.
 	broadcaster.cfg.Broadcast = func(tx *wire.MsgTx) error {
 		broadcastChan <- tx

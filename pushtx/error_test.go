@@ -48,7 +48,7 @@ func TestParseBroadcastErrorCode(t *testing.T) {
 			code: pushtx.InsufficientFee,
 		},
 		{
-			name: "flokicoind mempool double spend",
+			name: "lokid mempool double spend",
 			msg: &wire.MsgReject{
 				Code:   wire.RejectDuplicate,
 				Reason: "txn-mempool-conflict",
@@ -56,7 +56,7 @@ func TestParseBroadcastErrorCode(t *testing.T) {
 			code: pushtx.Invalid,
 		},
 		{
-			name: "flokicoind transaction in mempool",
+			name: "lokid transaction in mempool",
 			msg: &wire.MsgReject{
 				Code:   wire.RejectDuplicate,
 				Reason: "txn-already-in-mempool",
@@ -64,7 +64,7 @@ func TestParseBroadcastErrorCode(t *testing.T) {
 			code: pushtx.Mempool,
 		},
 		{
-			name: "flokicoind transaction in chain",
+			name: "lokid transaction in chain",
 			msg: &wire.MsgReject{
 				Code:   wire.RejectDuplicate,
 				Reason: "txn-already-known",
@@ -72,7 +72,7 @@ func TestParseBroadcastErrorCode(t *testing.T) {
 			code: pushtx.Confirmed,
 		},
 		{
-			name: "flokicoind mempool double spend",
+			name: "lokid mempool double spend",
 			msg: &wire.MsgReject{
 				Code:   wire.RejectDuplicate,
 				Reason: "already spent",
@@ -80,7 +80,7 @@ func TestParseBroadcastErrorCode(t *testing.T) {
 			code: pushtx.Invalid,
 		},
 		{
-			name: "flokicoind transaction in mempool",
+			name: "lokid transaction in mempool",
 			msg: &wire.MsgReject{
 				Code:   wire.RejectDuplicate,
 				Reason: "already have transaction",
@@ -88,7 +88,7 @@ func TestParseBroadcastErrorCode(t *testing.T) {
 			code: pushtx.Mempool,
 		},
 		{
-			name: "flokicoind transaction in chain",
+			name: "lokid transaction in chain",
 			msg: &wire.MsgReject{
 				Code:   wire.RejectDuplicate,
 				Reason: "transaction already exists",

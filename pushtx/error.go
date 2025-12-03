@@ -102,7 +102,7 @@ func ParseBroadcastError(msg *wire.MsgReject, peerAddr string) *BroadcastError {
 	case msg.Code == wire.RejectInsufficientFee:
 		code = InsufficientFee
 
-	// The cases below apply for reject messages sent from flokicoind peers.
+	// The cases below apply for reject messages sent from lokid peers.
 	//
 	// If the transaction double spends an unconfirmed transaction in the
 	// peer's mempool, then we'll deem it as invalid.
@@ -122,7 +122,7 @@ func ParseBroadcastError(msg *wire.MsgReject, peerAddr string) *BroadcastError {
 		strings.Contains(msg.Reason, "txn-already-known"):
 		code = Confirmed
 
-	// The cases below apply for reject messages sent from flokicoind peers.
+	// The cases below apply for reject messages sent from lokid peers.
 	//
 	// If the transaction double spends an unconfirmed transaction in the
 	// peer's mempool, then we'll deem it as invalid.
