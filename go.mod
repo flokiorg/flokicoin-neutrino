@@ -5,7 +5,7 @@ go 1.23.4
 require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/flokiorg/go-flokicoin v0.25.10-beta
-	github.com/flokiorg/walletd v0.1.1-alpha
+	github.com/flokiorg/walletd v0.1.5-beta
 	github.com/lightningnetwork/lnd/queue v1.1.1
 	github.com/stretchr/testify v1.10.0
 )
