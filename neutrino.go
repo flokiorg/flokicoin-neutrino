@@ -44,11 +44,11 @@ var (
 
 	// UserAgentName is the user agent name and is used to help identify
 	// ourselves to other flokicoin peers.
-	UserAgentName = "neutrino"
+	UserAgentName = "lokitrino"
 
 	// UserAgentVersion is the user agent version and is used to help
 	// identify ourselves to other flokicoin peers.
-	UserAgentVersion = "0.16.2"
+	UserAgentVersion = "0.16.4"
 
 	// Services describes the services that are supported by the server.
 	Services = wire.SFNodeWitness | wire.SFNodeCF
@@ -391,7 +391,7 @@ func (sp *ServerPeer) OnAddr(_ *peer.Peer, msg *wire.MsgAddr) {
 	// Add addresses to server address manager.  The address manager handles
 	// the details of things such as preventing duplicate addresses, max
 	// addresses, and last seen updates.
-	// XXX flokicoind gives a 2 hour time penalty here, do we want to do the
+	// XXX lokid gives a 2 hour time penalty here, do we want to do the
 	// same?
 	sp.server.addrManager.AddAddresses(addrs, sp.NA())
 }
@@ -1176,7 +1176,7 @@ func (s *ChainService) peerHandler() {
 					return
 				}
 
-				// Flokicoind uses a lookup of the dns seeder
+				// Lokid uses a lookup of the dns seeder
 				// here. This is rather strange since the
 				// values looked up by the DNS seed lookups
 				// will vary quite a lot.  to replicate this
@@ -1762,7 +1762,7 @@ func (c *cachedAddr) Size() (uint64, error) {
 }
 
 // onionAddr implements the net.Addr interface and represents a tor address.
-// This code is identical to flokicoind's unexported onionAddr. It is used so that
+// This code is identical to lokid's unexported onionAddr. It is used so that
 // neutrino can connect to v2 addresses without relying on the OnionCat
 // encoding. It also enables connecting to v3 addresses.
 type onionAddr struct {
