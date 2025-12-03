@@ -1348,7 +1348,7 @@ txOutLoop:
 
 // Rescan is an object that represents a long-running rescan/notification
 // client with updateable filters. It's meant to be close to a drop-in
-// replacement for the flokicoind rescan and notification functionality used in
+// replacement for the lokid rescan and notification functionality used in
 // wallets. It only contains information about whether a goroutine is running.
 type Rescan struct { // nolint:maligned
 	started uint32 // To be used atomically.
