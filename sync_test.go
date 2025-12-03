@@ -1044,7 +1044,7 @@ func TestNeutrinoSync(t *testing.T) {
 	rpcLogger.SetLevel(logLevel)
 	rpcclient.UseLogger(rpcLogger)
 
-	// Create a flokicoind SimNet node and generate 800 blocks
+	// Create a lokid SimNet node and generate 80 blocks
 	h1, err := rpctest.New(
 		&chaincfg.SimNetParams, nil, []string{"--txindex"}, "",
 	)
@@ -1056,12 +1056,12 @@ func TestNeutrinoSync(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Couldn't set up harness: %s", err)
 	}
-	_, err = h1.Client.Generate(800)
+	_, err = h1.Client.Generate(80)
 	if err != nil {
 		t.Fatalf("Couldn't generate blocks: %s", err)
 	}
 
-	// Create a second flokicoind SimNet node
+	// Create a second lokid SimNet node
 	h2, err := rpctest.New(
 		&chaincfg.SimNetParams, nil, []string{"--txindex"}, "",
 	)
@@ -1074,7 +1074,7 @@ func TestNeutrinoSync(t *testing.T) {
 		t.Fatalf("Couldn't set up harness: %s", err)
 	}
 
-	// Create a third flokicoind SimNet node and generate 1200 blocks
+	// Create a third lokid SimNet node and generate 120 blocks
 	h3, err := rpctest.New(
 		&chaincfg.SimNetParams, nil, []string{"--txindex"}, "",
 	)
@@ -1086,7 +1086,7 @@ func TestNeutrinoSync(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Couldn't set up harness: %s", err)
 	}
-	_, err = h3.Client.Generate(1200)
+	_, err = h3.Client.Generate(120)
 	if err != nil {
 		t.Fatalf("Couldn't generate blocks: %s", err)
 	}
@@ -1097,30 +1097,30 @@ func TestNeutrinoSync(t *testing.T) {
 		t.Fatalf("Couldn't connect/sync/disconnect h1 and h2: %s", err)
 	}
 
-	// Generate 300 blocks on the first node and 350 on the second
-	_, err = h1.Client.Generate(300)
+	// Generate 30 blocks on the first node and 35 on the second
+	_, err = h1.Client.Generate(30)
 	if err != nil {
 		t.Fatalf("Couldn't generate blocks: %s", err)
 	}
-	_, err = h2.Client.Generate(350)
+	_, err = h2.Client.Generate(35)
 	if err != nil {
 		t.Fatalf("Couldn't generate blocks: %s", err)
 	}
 
-	// Now we have a node with 1100 blocks (h1), 1150 blocks (h2), and
-	// 1200 blocks (h3). The chains of nodes h1 and h2 match up to block
-	// 800. By default, a synchronizing wallet connected to all three
+	// Now we have a node with 110 blocks (h1), 115 blocks (h2), and
+	// 120 blocks (h3). The chains of nodes h1 and h2 match up to block
+	// 80. By default, a synchronizing wallet connected to all three
 	// should synchronize to h3. However, we're going to take checkpoints
-	// from h1 at 111, 333, 555, 777, and 999, and add those to the
+	// from h1 at 11, 33, 55, 77, and 99, and add those to the
 	// synchronizing wallet's chain parameters so that it should
-	// disconnect from h3 at block 111, and from h2 at block 555, and
-	// then synchronize to block 800 from h1. Order of connection is
+	// disconnect from h3 at block 11, and from h2 at block 55, and
+	// then synchronize to block 80 from h1. Order of connection is
 	// unfortunately not guaranteed, so the reorg may not happen with every
 	// test.
 
 	// Copy parameters and insert checkpoints
 	modParams := chaincfg.SimNetParams
-	for _, height := range []int64{111, 333, 555, 777, 999} {
+	for _, height := range []int64{11, 33, 55, 77, 99} {
 		hash, err := h1.Client.GetBlockHash(height)
 		if err != nil {
 			t.Fatalf("Couldn't get block hash for height %d: %s",
@@ -1141,7 +1141,7 @@ func TestNeutrinoSync(t *testing.T) {
 	}
 	defer os.RemoveAll(tempDir)
 	db, err := walletdb.Create(
-		"bdb", tempDir+"/weks.db", true, dbOpenTimeout,
+		"bdb", tempDir+"/weks.db", true, dbOpenTimeout, false,
 	)
 	if err != nil {
 		t.Fatalf("Error opening DB: %s\n", err)
