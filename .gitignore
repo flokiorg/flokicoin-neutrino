@@ -31,3 +31,6 @@ coverage.txt
 
 # go workspace
 go.work
+
+*.log
+.com
