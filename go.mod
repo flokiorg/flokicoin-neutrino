@@ -1,6 +1,6 @@
 module github.com/flokiorg/flokicoin-neutrino
 
-go 1.23.4
+go 1.26.1
 
 require (
 	github.com/davecgh/go-spew v1.1.1
