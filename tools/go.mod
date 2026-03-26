@@ -1,9 +1,9 @@
 module github.com/flokiorg/flokicoin-neutrino/tools
 
-go 1.18
+go 1.26.1
 
 require (
-	github.com/flokiorg/go-flokicoin v0.23.3
+	github.com/flokiorg/go-flokicoin v0.25.12-alpha
 	github.com/golangci/golangci-lint v1.50.1
 	github.com/ory/go-acc v0.2.8
 	github.com/rinchsan/gosimports v0.1.5
@@ -30,10 +30,6 @@ require (
 	github.com/bombsimon/wsl/v3 v3.3.0 // indirect
 	github.com/breml/bidichk v0.2.3 // indirect
 	github.com/breml/errchkjson v0.3.0 // indirect
-	github.com/flokiorg/go-flokicoin/crypto v2.1.3 // indirect
-	github.com/flokiorg/go-flokicoin/chainutil v1.1.0 // indirect
-	github.com/flokiorg/go-flokicoin/chaincfg/chainhash v1.0.1 // indirect
-	github.com/flokiorg/go-flokicoin/log v0.0.0-20170628155309-84c8d2346e9f // indirect
 	github.com/btcsuite/go-socks v0.0.0-20170105172521-4720035b7bfd // indirect
 	github.com/btcsuite/websocket v0.0.0-20150119174127-31079b680792 // indirect
 	github.com/btcsuite/winsvc v1.0.0 // indirect
