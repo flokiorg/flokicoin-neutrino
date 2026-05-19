@@ -10,6 +10,7 @@ require (
 	github.com/lightningnetwork/lnd/queue v1.1.1
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/exp v0.0.0-20250210185358-939b2ce775ac
+	pgregory.net/rapid v1.2.0
 )
 
 require (
