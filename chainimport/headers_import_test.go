@@ -4912,8 +4912,10 @@ func TestRelativeAncestorCtxNonZeroStartHeight(t *testing.T) {
 	mockSource := &mockHeaderImportSource{}
 	mockSource.On("GetHeaderMetadata").Return(
 		&headerMetadata{
-			importMetadata: &importMetadata{startHeight: startHeight},
-			headersCount:   numHeaders,
+			importMetadata: &importMetadata{
+				startHeight: startHeight,
+			},
+			headersCount: numHeaders,
 		}, nil,
 	)
 	for i := 0; i < numHeaders; i++ {
