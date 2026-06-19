@@ -2,7 +2,6 @@ package chainimport
 
 import (
 	"bytes"
-	"context"
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
@@ -101,7 +100,7 @@ func TestHeadersConjunctionProperty(t *testing.T) {
 // are written to the target header stores.
 func TestImportOperationOnFileHeaderSource(t *testing.T) {
 	t.Parallel()
-	ctx := context.Background()
+	ctx := t.Context()
 	type prep struct {
 		options *ImportOptions
 		cleanup func()
@@ -276,7 +275,7 @@ func TestImportOperationOnFileHeaderSource(t *testing.T) {
 // are written to the target header stores.
 func TestImportOperationOnHTTPHeaderSource(t *testing.T) {
 	t.Parallel()
-	ctx := context.Background()
+	ctx := t.Context()
 	type prep struct {
 		hImport *headersImport
 		cleanup func()
@@ -4990,7 +4989,7 @@ func TestRelativeAncestorCtxNonZeroStartHeight(t *testing.T) {
 // sequential block headers. It checks that the header is validated correctly.
 func TestHeaderValidationOnSequentialBlockHeaders(t *testing.T) {
 	t.Parallel()
-	ctx := context.Background()
+	ctx := t.Context()
 	type prep struct {
 		iterator  HeaderIterator
 		validator HeadersValidator
@@ -5187,7 +5186,7 @@ func TestHeaderValidationOnSequentialBlockHeaders(t *testing.T) {
 // correctly.
 func TestHeaderValidationOnSequentialFilterHeaders(t *testing.T) {
 	t.Parallel()
-	ctx := context.Background()
+	ctx := t.Context()
 	type prep struct {
 		iterator  HeaderIterator
 		validator HeadersValidator
@@ -6455,7 +6454,7 @@ func TestHeaderStorage(t *testing.T) {
 // validating the leading store and syncing the lagging store.
 func TestHeaderStorageOnDivergenceHeadersRegion(t *testing.T) {
 	t.Parallel()
-	ctx := context.Background()
+	ctx := t.Context()
 	type prep struct {
 		hImport *headersImport
 		cleanup func()
@@ -7327,7 +7326,7 @@ func TestHeaderStorageOnDivergenceHeadersRegion(t *testing.T) {
 // target header stores.
 func TestHeaderStorageOnNewHeadersRegion(t *testing.T) {
 	t.Parallel()
-	ctx := context.Background()
+	ctx := t.Context()
 	type prep struct {
 		hImport *headersImport
 		cleanup func()
