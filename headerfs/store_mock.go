@@ -172,16 +172,38 @@ type MockWalletDB struct {
 	mock.Mock
 }
 
-// Update implements the walletdb.DB interface.
-func (m *MockWalletDB) Update(fn func(tx walletdb.ReadWriteTx) error) error {
-	args := m.Called(fn)
-	return args.Error(0)
+// Update implements the walletdb.DB interface. It mirrors the real
+// transaction semantics (begin, run, commit/rollback) so that mocking
+// BeginReadWriteTx to fail is enough to make Update fail, without also
+// having to set up a separate "Update" expectation.
+func (m *MockWalletDB) Update(fn func(tx walletdb.ReadWriteTx) error,
+	_ func()) error {
+
+	tx, err := m.BeginReadWriteTx()
+	if err != nil {
+		return err
+	}
+
+	if err := fn(tx); err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+
+	return tx.Commit()
 }
 
-// View implements the walletdb.DB interface.
-func (m *MockWalletDB) View(fn func(tx walletdb.ReadTx) error) error {
-	args := m.Called(fn)
-	return args.Error(0)
+// View implements the walletdb.DB interface. See Update for why this calls
+// through to BeginReadTx instead of recording its own expectation.
+func (m *MockWalletDB) View(fn func(tx walletdb.ReadTx) error,
+	_ func()) error {
+
+	tx, err := m.BeginReadTx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	return fn(tx)
 }
 
 // BeginReadWriteTx implements the walletdb.DB interface.
@@ -216,4 +238,10 @@ func (m *MockWalletDB) Copy(w io.Writer) error {
 func (m *MockWalletDB) Close() error {
 	args := m.Called()
 	return args.Error(0)
+}
+
+// PrintStats implements the walletdb.DB interface.
+func (m *MockWalletDB) PrintStats() string {
+	args := m.Called()
+	return args.String(0)
 }

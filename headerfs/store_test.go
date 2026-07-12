@@ -299,7 +299,7 @@ func TestBlockHeaderStoreOnDBWriteRecovery(t *testing.T) {
 
 				dbPath := filepath.Join(tempDir, "test.db")
 				db, err := walletdb.Create(
-					"bdb", dbPath, true, time.Second*10,
+					"bdb", dbPath, true, time.Second*10, false,
 				)
 				cleanup := func() {
 					db.Close()
@@ -694,7 +694,7 @@ func TestFilterHeaderStoreDBWriteRecovery(t *testing.T) {
 
 				dbPath := filepath.Join(tempDir, "test.db")
 				db, err := walletdb.Create(
-					"bdb", dbPath, true, time.Second*10,
+					"bdb", dbPath, true, time.Second*10, false,
 				)
 				cleanup := func() {
 					db.Close()
