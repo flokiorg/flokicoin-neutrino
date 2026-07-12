@@ -23,9 +23,7 @@ import (
 
 // Block headers for testing captured from simnet network.
 var blockHdrs = []string{
-	"010000000000000000000000000000000000000000000000000000000000" +
-		"0000000000003ba3edfd7a7b12b27ac72c3e67768f617fc81bc3" +
-		"888a51323a9fb8aa4b1e5e4a45068653ffff7f2002000000",
+	"0100000000000000000000000000000000000000000000000000000000000000000000000466bcf2299e92ab56852662658063defd6e20923ff4b30453d154b98831fbdcb6bc6f67ffff7f201eac2b7c",
 	"00000020f67ad7695d9b662a72ff3d8edbbb2de0bfa67b13974bb9910d11" +
 		"6d5cbd863e68c552826d121f12fcb288895d9488d189891ce0a6" +
 		"5a56193ea2ff3d4b99eabb875fac5a68ffff7f2003000000",
@@ -709,7 +707,7 @@ func TestRollbackBlockHeaders(t *testing.T) {
 
 		dbPath := filepath.Join(tempDir, "test.db")
 		db, err := walletdb.Create(
-			"bdb", dbPath, true, time.Second*10,
+			"bdb", dbPath, true, time.Second*10, false,
 		)
 		cleanup := func() {
 			db.Close()
