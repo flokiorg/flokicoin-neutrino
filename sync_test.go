@@ -1076,6 +1076,10 @@ func testRandomBlocks(harness *neutrinoHarness, t *testing.T) {
 // a way to bootstrap neutrino nodes and significantly improving sync
 // performance.
 func TestNeutrinoSyncWithHeadersImport(t *testing.T) {
+	if testing.Short() {
+		t.Skip("spawns a real lokid node and syncs over the network")
+	}
+
 	rootCtx := t.Context()
 
 	// Create a lokid SimNet node and generate 80 blocks.
@@ -1260,6 +1264,10 @@ func TestNeutrinoSyncWithHeadersImport(t *testing.T) {
 // import, so its internal tracking state must be refreshed after import to
 // build correct P2P locators for the remaining chain.
 func TestNeutrinoImportThenP2PSync(t *testing.T) {
+	if testing.Short() {
+		t.Skip("spawns a real lokid node and syncs over the network")
+	}
+
 	rootCtx := t.Context()
 
 	// Create a btcd SimNet node and generate an initial chain.
@@ -1389,6 +1397,10 @@ func TestNeutrinoImportThenP2PSync(t *testing.T) {
 // TestNeutrinoSyncWithoutHeadersImport tests the standard synchronization
 // behavior of Neutrino without using the headers import feature.
 func TestNeutrinoSyncWithoutHeadersImport(t *testing.T) {
+	if testing.Short() {
+		t.Skip("spawns a real lokid node and syncs over the network")
+	}
+
 	rootCtx := t.Context()
 
 	// Create a lokid SimNet node and generate 80 blocks

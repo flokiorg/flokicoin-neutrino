@@ -875,6 +875,10 @@ func TestBlockManagerDetectBadPeers(t *testing.T) {
 // disconnect peers that serve us bad headers (headers that don't connect to
 // each other properly).
 func TestHandleHeaders(t *testing.T) {
+	if testing.Short() {
+		t.Skip("spawns a real lokid node and syncs over the network")
+	}
+
 	t.Parallel()
 
 	// First, we set up a block manager and a fake peer that will act as the
