@@ -1126,15 +1126,15 @@ func (s *ChainService) sendTransaction(tx *wire.MsgTx, options ...QueryOption) e
 		numPeersResponded := float32(len(replies))
 
 		log.Debugf("Of %d peers that replied, %d think the TX is "+
-			"invalid", numPeersResponded, numInvalid)
+			"invalid", int(numPeersResponded), int(numInvalid))
 
 		// 60% or more (by default) of the peers declared this TX as
 		// invalid.
 		if numInvalid/numPeersResponded >= qo.invalidTxThreshold {
-			log.Warnf("Threshold of %d reached (%d out of %d "+
+			log.Warnf("Threshold of %.2f reached (%d out of %d "+
 				"peers), declaring TX %v as invalid",
-				qo.invalidTxThreshold, numInvalid,
-				numPeersResponded, txHash)
+				qo.invalidTxThreshold, int(numInvalid),
+				int(numPeersResponded), txHash)
 
 			return firstRejectWithCode(pushtx.Invalid)
 		}

@@ -124,10 +124,10 @@ func VerifyBasicBlockFilter(filter *gcs.Filter, block *chainutil.Block) (int,
 			// filter is faulty though so we also just skip over
 			// this input.
 			if err != nil {
-				log.Debug("Skipping filter validation for "+
+				log.Debugf("Skipping filter validation for "+
 					"input %d of tx %v in block %v "+
 					"because computing the script failed: "+
-					"%v", inIdx, block.Hash(), err)
+					"%v", inIdx, tx.Hash(), block.Hash(), err)
 
 				continue
 			}
