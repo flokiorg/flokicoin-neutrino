@@ -193,7 +193,7 @@ func (f *FilterStore) PutFilters(filterList ...*FilterData) error {
 			}
 
 			log.Tracef("Wrote filter for block %s, type %d",
-				&filterData.BlockHash, filterData.Type)
+				filterData.BlockHash, filterData.Type)
 		}
 
 		return nil
