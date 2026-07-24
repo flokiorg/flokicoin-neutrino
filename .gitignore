@@ -34,3 +34,4 @@ go.work
 
 *.log
 .com
+.agents/
