@@ -34,3 +34,10 @@ go.work
 
 *.log
 .com
+
+# Local agent/tooling directories, not part of the project.
+.agents/
+.claude/
+
+# GoReleaser build output.
+dist/
