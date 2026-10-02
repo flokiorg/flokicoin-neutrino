@@ -4,8 +4,8 @@ go 1.26.8
 
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
-	github.com/flokiorg/go-flokicoin v0.26.2
-	github.com/flokiorg/walletd v0.2.1-beta
+	github.com/flokiorg/go-flokicoin v0.26.3
+	github.com/flokiorg/walletd v0.2.2
 	github.com/lightningnetwork/lnd/fn/v2 v2.0.8
 	github.com/lightningnetwork/lnd/queue v1.1.1
 	github.com/stretchr/testify v1.11.1
