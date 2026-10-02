@@ -50,7 +50,11 @@ var (
 
 	// UserAgentVersion is the user agent version and is used to help
 	// identify ourselves to other flokicoin peers.
-	UserAgentVersion = "0.16.4"
+	//
+	// This library has no main package, so there is no build-time injection
+	// available to keep it current. It must match the topmost CHANGELOG.md
+	// heading, and TestUserAgentVersionMatchesChangelog enforces that.
+	UserAgentVersion = "0.17.2"
 
 	// Services describes the services that are supported by the server.
 	Services = wire.SFNodeWitness | wire.SFNodeCF
