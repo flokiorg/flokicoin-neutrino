@@ -15,7 +15,19 @@
   27 per-platform "binaries" previous releases published were Go object
   archives (`!<arch>` / `__.PKGDEF`), roughly 10 MB each and not runnable. The
   release is now sources-only, which is what a library release should be.
-- Built with Go 1.26.5. (#5)
+- Built with Go 1.26.8, up from 1.26.5. That closes four reachable stdlib
+  vulnerabilities reported by govulncheck -- GO-2026-6218 (net/url),
+  GO-2026-6090 (crypto/tls), GO-2026-5972 (encoding/asn1) and GO-2026-5026
+  (net/http) -- all of which were fixed in 1.26.6. govulncheck now reports
+  none. (#5)
+- Updated `go-flokicoin` to
+  [v0.26.2](https://github.com/flokiorg/go-flokicoin/releases/tag/v0.26.2) and
+  `walletd` to v0.2.1-beta, from v0.25.13-alpha and v0.1.5-beta. That also
+  pulled `google.golang.org/grpc` from v1.71.0 to v1.79.3, closing
+  GHSA-p77j-4mvh-x3m3.
+- The release workflow now runs `go test -short`, the same command CI runs. It
+  was running the full suite, which needs a chain to sync against and so could
+  never pass on a runner -- it failed the first 0.17.2 release attempt.
 
 ## [0.17.1-beta]
 
