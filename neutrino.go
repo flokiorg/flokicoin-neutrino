@@ -54,7 +54,7 @@ var (
 	// This library has no main package, so there is no build-time injection
 	// available to keep it current. It must match the topmost CHANGELOG.md
 	// heading, and TestUserAgentVersionMatchesChangelog enforces that.
-	UserAgentVersion = "0.17.2"
+	UserAgentVersion = "0.17.3-rc.1"
 
 	// Services describes the services that are supported by the server.
 	Services = wire.SFNodeWitness | wire.SFNodeCF
