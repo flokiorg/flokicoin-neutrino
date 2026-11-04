@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.3-rc.1]
+
+### Changed
+
+- Updates `go-flokicoin` to v0.26.4-rc.1 and `walletd` to v0.2.3, taking the
+  latest Flokicoin libraries.
+
 ## [0.17.2]
 
 ### Fixed
